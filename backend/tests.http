@@ -1,0 +1,189 @@
+### RetailFixIT API Test File
+### Run with VS Code REST Client extension or JetBrains HTTP Client
+
+@baseUrl = http://localhost:5000/api/v1
+@token = {{login.response.body.token}}
+
+# ============================================================
+# AUTH
+# ============================================================
+
+### Login as Dispatcher
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "dispatcher@acme.com",
+  "password": "Test1234!"
+}
+
+###
+
+### Login as Admin
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@acme.com",
+  "password": "Test1234!"
+}
+
+###
+
+### Get current user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+###
+
+# ============================================================
+# JOBS
+# ============================================================
+
+### List jobs (paginated)
+GET {{baseUrl}}/jobs?page=1&pageSize=10
+Authorization: Bearer {{token}}
+
+###
+
+### List jobs with filters
+GET {{baseUrl}}/jobs?page=1&pageSize=10&status=New&priority=High
+Authorization: Bearer {{token}}
+
+###
+
+### Search jobs
+GET {{baseUrl}}/jobs?search=leak
+Authorization: Bearer {{token}}
+
+###
+
+### Create a new job
+# @name createJob
+POST {{baseUrl}}/jobs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Emergency Pipe Leak - Unit 5B",
+  "description": "Customer reports water leaking from under the kitchen sink. Urgent repair needed.",
+  "customerName": "Jane Doe",
+  "serviceAddress": "500 Oak Avenue, Apt 5B, Springfield, IL",
+  "serviceType": "Plumbing",
+  "priority": "High",
+  "scheduledAt": "2026-02-20T10:00:00Z"
+}
+
+###
+
+### Get job by ID
+GET {{baseUrl}}/jobs/{{createJob.response.body.id}}
+Authorization: Bearer {{token}}
+
+###
+
+### Update job status
+PATCH {{baseUrl}}/jobs/{{createJob.response.body.id}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "InProgress"
+}
+
+###
+
+### Cancel a job (Admin only)
+DELETE {{baseUrl}}/jobs/{{createJob.response.body.id}}/cancel
+Authorization: Bearer {{token}}
+
+###
+
+# ============================================================
+# AI RECOMMENDATIONS
+# ============================================================
+
+### Request AI recommendation for a job
+POST {{baseUrl}}/jobs/{{createJob.response.body.id}}/recommendations
+Authorization: Bearer {{token}}
+
+###
+
+### Get recommendations for a job
+GET {{baseUrl}}/jobs/{{createJob.response.body.id}}/recommendations
+Authorization: Bearer {{token}}
+
+###
+
+# ============================================================
+# VENDORS
+# ============================================================
+
+### List vendors
+GET {{baseUrl}}/vendors?page=1&pageSize=10
+Authorization: Bearer {{token}}
+
+###
+
+### List vendors with available capacity
+GET {{baseUrl}}/vendors?hasCapacity=true&pageSize=50
+Authorization: Bearer {{token}}
+
+###
+
+### Create a vendor (VendorManager / Admin)
+# @name createVendor
+POST {{baseUrl}}/vendors
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "QuickFix Plumbing",
+  "contactEmail": "dispatch@quickfixplumbing.com",
+  "serviceArea": "North District",
+  "specializations": "Plumbing, Water Heater, Pipe Repair",
+  "capacityLimit": 8
+}
+
+###
+
+# ============================================================
+# ASSIGNMENTS
+# ============================================================
+
+### Get assignments for a job
+GET {{baseUrl}}/jobs/{{createJob.response.body.id}}/assignments
+Authorization: Bearer {{token}}
+
+###
+
+### Assign vendor to job
+# @name assignVendor
+POST {{baseUrl}}/jobs/{{createJob.response.body.id}}/assignments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "vendorId": "PASTE-VENDOR-ID-HERE",
+  "notes": "Vendor confirmed availability for requested time slot"
+}
+
+###
+
+### Revoke assignment
+DELETE {{baseUrl}}/jobs/{{createJob.response.body.id}}/assignments/{{assignVendor.response.body.id}}
+Authorization: Bearer {{token}}
+
+###
+
+# ============================================================
+# AUDIT LOGS (Admin only)
+# ============================================================
+
+### Get audit logs
+GET {{baseUrl}}/audit-logs
+Authorization: Bearer {{token}}
+
+###

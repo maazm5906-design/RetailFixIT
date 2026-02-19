@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RetailFixIT.API/RetailFixIT.API.csproj" />
+    <Project Path="src/RetailFixIT.Application/RetailFixIT.Application.csproj" />
+    <Project Path="src/RetailFixIT.Contracts/RetailFixIT.Contracts.csproj" />
+    <Project Path="src/RetailFixIT.Domain/RetailFixIT.Domain.csproj" />
+    <Project Path="src/RetailFixIT.Infrastructure/RetailFixIT.Infrastructure.csproj" />
+  </Folder>
+</Solution>

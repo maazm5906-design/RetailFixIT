@@ -1,0 +1,1 @@
+[System.IO.File]::WriteAllText("C:\Users\DELL\Desktop\RetailFixIT\frontend\src\types\index.ts", "test", [System.Text.Encoding]::UTF8)
