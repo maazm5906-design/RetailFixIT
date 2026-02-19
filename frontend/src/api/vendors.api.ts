@@ -36,4 +36,8 @@ export const vendorsApi = {
     const { data } = await apiClient.put<Vendor>(`/vendors/${id}`, payload);
     return data;
   },
+
+  deleteVendor: async (id: string): Promise<void> => {
+    await apiClient.delete(`/vendors/${id}`);
+  },
 };

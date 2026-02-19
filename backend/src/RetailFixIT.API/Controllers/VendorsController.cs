@@ -68,6 +68,26 @@ public class VendorsController : ControllerBase
         });
     }
 
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateVendor(Guid id, [FromBody] UpdateVendorRequest request, CancellationToken ct)
+    {
+        var vendor = await _vendors.GetByIdAsync(id, ct) ?? throw new KeyNotFoundException($"Vendor {id} not found");
+        vendor.Name = request.Name;
+        vendor.ContactEmail = request.ContactEmail;
+        vendor.ServiceArea = request.ServiceArea;
+        vendor.Specializations = request.Specializations;
+        vendor.CapacityLimit = request.CapacityLimit;
+        await _vendors.UpdateAsync(vendor, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteVendor(Guid id, CancellationToken ct)
+    {
+        await _vendors.DeleteAsync(id, ct);
+        return NoContent();
+    }
+
     [HttpPatch("{id:guid}/activate")]
     public async Task<IActionResult> Activate(Guid id, CancellationToken ct)
     {
@@ -86,3 +106,6 @@ public class VendorsController : ControllerBase
         return NoContent();
     }
 }
+
+public record CreateVendorRequest(string Name, string ContactEmail, string? ContactPhone, string ServiceArea, string? Specializations, int CapacityLimit);
+public record UpdateVendorRequest(string Name, string ContactEmail, string ServiceArea, string? Specializations, int CapacityLimit);

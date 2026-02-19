@@ -47,4 +47,14 @@ public class VendorRepository : IVendorRepository
         _db.Vendors.Update(vendor);
         await _db.SaveChangesAsync(ct);
     }
+
+    public async Task DeleteAsync(Guid id, CancellationToken ct = default)
+    {
+        var vendor = await _db.Vendors.FirstOrDefaultAsync(v => v.Id == id, ct);
+        if (vendor != null)
+        {
+            _db.Vendors.Remove(vendor);
+            await _db.SaveChangesAsync(ct);
+        }
+    }
 }

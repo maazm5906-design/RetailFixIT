@@ -14,4 +14,5 @@ public interface IVendorRepository
     Task<IEnumerable<Vendor>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default);
     Task<Vendor> AddAsync(Vendor vendor, CancellationToken ct = default);
     Task UpdateAsync(Vendor vendor, CancellationToken ct = default);
+    Task DeleteAsync(Guid id, CancellationToken ct = default);
 }
